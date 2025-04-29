@@ -100,6 +100,7 @@ form.addEventListener('submit', function(e) {
   //latexファイルの生成
   //空のzipファイルオブジェクトを生成
   const zip = new JSZip();
+  
   //zipファイルにディレクトリ作成
   const folder = zip.folder("soturon");
 
