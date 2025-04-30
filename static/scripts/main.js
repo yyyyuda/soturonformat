@@ -97,6 +97,8 @@ form.addEventListener('submit', function(e) {
   console.log(teacherName);
   console.log(githubUrl);
 
+  /*
+  
   //latexファイルの生成
   //空のzipファイルオブジェクトを生成
   const zip = new JSZip();
@@ -122,5 +124,8 @@ form.addEventListener('submit', function(e) {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(link.href);
+
     });
+
+    */
 });

@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>論文フォーマット作成</title>
-  <link rel="stylesheet" href="style.css">
-  <!--ZIPjsのダウンロード-->
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <form action="#" method="post">
+  <form  method="post">
+  
     <!-- タイトル入力 -->
     <div>
       <label for="soturontittle">卒論タイトル:</label>
       <input type="text" id="soturontittle" name="soturontittle">
     </div>
+
     <!-- 氏名入力 -->
     <div>
       <label for="name">氏名：</label>
@@ -35,8 +35,8 @@
 
     <!-- GitHub URL入力 -->
     <div>
-      <label for="githubUrl">GitHubのURL:</label>
-      <input type="url" id="githubUrl" name="githubUrl" required>
+      <label for="repo_name">リポジトリ名:</label>
+      <input type="text" id="repo_name" name="repo_name" required>
     </div>
 
     <!-- 送信ボタン -->
@@ -44,9 +44,8 @@
       <button id="button" type="submit">送信</button>
     </div>
   </form>
-  <script 
-  src="main.js"
-  type="module"></script>
-  </script>
+
+  <!-- スクリプト -->
+  <script src="{{ url_for('static', filename='scripts/app.js') }}"></script>
 </body>
 </html>
