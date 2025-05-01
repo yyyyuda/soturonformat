@@ -1,7 +1,7 @@
 import os ##ファイルを操作するモジュール
 import zipfile
 import subprocess ##　pythonからターミナルを操作するモジュール
-from flask import Flask, send_file, render_template, request
+from flask import Flask, send_file, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -11,14 +11,24 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # HTMLページを返すルートを追加
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/')
 def index():
     return render_template('index.html')  # HTMLファイルを返す
 
-@app.route('/create-repo', methods=['POST'])
-def create_repo():
-    ## htmlからのpostの内容をpythonの辞書形式で取得
-    repo_name = request.form['repo_name']
+@app.route('/process-data', methods=['POST'])
+def process_data():
+
+    data = request.get_json()  # JSONデータを取得
+    name = data.get('name')
+    latexTemplate = data.get('latexTemplate')
+    latexBuild = data.get('latexBuild')
+    studentNumber = data.get('studentNumber')
+    tittle  = data.get('tittle')
+    teacherName = data.get('teacherName')
+    repo_name = data.get('repo_name')
+    githubUrl = data.get('githubUrl')
+
     ## リポジトリ名とuploadsをパスとして結合
     repo_path = os.path.join(app.config['UPLOAD_FOLDER'], repo_name)
 
@@ -47,6 +57,17 @@ def create_repo():
         subprocess.run(['git', 'add', '.'], cwd=repo_path)
         subprocess.run(['git', 'commit', '-m', 'Initial commit'], cwd=repo_path)
 
+        with open(os.path.join(repo_path, 'soturon.tex'), 'w') as f:
+            ## ファイルに書き込み
+            ## f.write：埋め込み文字列
+            f.write(f"{latexTemplate}")
+
+        with open(os.path.join(repo_path, 'pdfbuild.sh'), 'w') as f:
+            ## ファイルに書き込み
+            ## f.write：埋め込み文字列
+            f.write(f"{latexBuild}")
+
+
         # ZIPファイルの名前
         zip_filename = f"{repo_name}.zip"
         zip_filepath = os.path.join(app.config['UPLOAD_FOLDER'], zip_filename)
@@ -62,7 +83,8 @@ def create_repo():
                     ## zipfile.ZipFile.write(): (圧縮するファイルの絶対パス、zipファイルの中での相対パス)
                     ## relpath：(絶対パス、 カレントディレクトリのパス)相対パスを取得
                     zipf.write(os.path.join(curDir, file), os.path.relpath(os.path.join(curDir, file), repo_path))
-
+        if not os.path.exists(zip_filepath):
+            return f"ZIP file not found: {zip_filepath}", 404
         # ZIPファイルをダウンロードリンクとして提供
         ## (ダウンロードする相対パス、 as_attachment=True：ブラウザでダウンロード)
         return send_file(zip_filepath, as_attachment=True)

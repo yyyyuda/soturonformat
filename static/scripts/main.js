@@ -4,13 +4,14 @@
 const form = document.querySelector('form');
 
 form.addEventListener('submit', function(e) {
-  e.preventDefault(); // ページリロードを防ぐ
 
+  e.preventDefault()
   const name = document.getElementById('name').value || "京産太郎";
   const studentNumber = document.getElementById('studentNumber').value || "123456";
   const tittle = document.getElementById('soturontittle').value || "卒業論文のタイトル";
   const teacherName = document.getElementById('teacherName').value || "奥田次郎";
-  const githubUrl = document.getElementById('githubUrl').value || "https://github.co.jp/";
+  const repo_name = document.getElementById('repo_name').value || "soturon";  // リポジトリ名
+  const githubUrl = document.getElementById('GitHubURL').value || "https://github.co.jp/";
 
   //latex,build,bibファイル用のテンプレートを生成
   //Buildファイルのテンプレート
@@ -88,15 +89,55 @@ form.addEventListener('submit', function(e) {
     \\end{document}
     `.trim(); //最初と最後の空白を消す
 
+      const userData = {
+        latexTemplate:latexTemplate,
+        latexBuild:latexBuild,
+        name: name,  // 名前
+        studentNumber: studentNumber,  // 学籍番号
+        tittle: tittle,  // 卒論タイトル
+        teacherName: teacherName,  // 教員名
+        repo_name: repo_name,  // リポジトリ名
+        githubUrl: githubUrl,  // GitHub URL
+      }
+
+      // Fetch APIを使用して非同期通信を行う
+      // urlにhttpリクエストを送信する
+      fetch('/process-data', {
+          method: 'POST',  // POSTリクエストオプション
+          //リクエスト
+          headers: { //サーバーに送るメタ情報
+              'Content-Type': 'application/json'  // JSON形式で送信
+          },
+          // サーバーに送るデータ
+          body: JSON.stringify(userData)  // データをJSON形式で送信
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.blob(); // ZIP ファイルを Blob として取得
+          })
+          .then(blob => {
+            // Blob を URL に変換
+            const url = window.URL.createObjectURL(blob);
+      
+            // ダウンロードリンクを作成してクリックをトリガー
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${repo_name}.zip`; // ダウンロード時のファイル名
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+      
+            // URL を解放
+            window.URL.revokeObjectURL(url);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+
+
     // 入力の要素を取得
-
-  // コンソールに表示
-  console.log(tittle);
-  console.log(name);
-  console.log(studentNumber);
-  console.log(teacherName);
-  console.log(githubUrl);
-
   /*
   
   //latexファイルの生成
