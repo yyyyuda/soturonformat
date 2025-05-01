@@ -20,13 +20,12 @@ def index():
 def process_data():
 
     data = request.get_json()  # JSONデータを取得
-    name = data.get('name')
     latexTemplate = data.get('latexTemplate')
     latexBuild = data.get('latexBuild')
+    README = data.get('README')
+    name = data.get('name')
     studentNumber = data.get('studentNumber')
-    tittle  = data.get('tittle')
-    teacherName = data.get('teacherName')
-    repo_name = data.get('repo_name')
+    repo_name = "soturon"
     githubUrl = data.get('githubUrl')
 
     ## リポジトリ名とuploadsをパスとして結合
@@ -51,13 +50,13 @@ def process_data():
         with open(os.path.join(repo_path, 'README.md'), 'w') as f:
             ## ファイルに書き込み
             ## f.write：埋め込み文字列
-            f.write(f"# {repo_name}\nThis is a Git repository")
+            f.write(f"{README}")
 
         # 最初のコミット
         subprocess.run(['git', 'add', '.'], cwd=repo_path)
         subprocess.run(['git', 'commit', '-m', 'Initial commit'], cwd=repo_path)
 
-        with open(os.path.join(repo_path, 'soturon.tex'), 'w') as f:
+        with open(os.path.join(repo_path, f"{studentNumber}_{name}_卒業論文.tex"), 'w') as f:
             ## ファイルに書き込み
             ## f.write：埋め込み文字列
             f.write(f"{latexTemplate}")
