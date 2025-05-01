@@ -4,22 +4,24 @@
 const form = document.querySelector('form');
 
 form.addEventListener('submit', function(e) {
-  e.preventDefault(); // ページリロードを防ぐ
+  // ページのリロードを防ぐ
+  e.preventDefault()
 
+  // 入力値を取得
   const name = document.getElementById('name').value || "京産太郎";
   const studentNumber = document.getElementById('studentNumber').value || "123456";
   const tittle = document.getElementById('soturontittle').value || "卒業論文のタイトル";
   const teacherName = document.getElementById('teacherName').value || "奥田次郎";
-  const githubUrl = document.getElementById('githubUrl').value || "https://github.co.jp/";
+  const githubUrl = document.getElementById('GitHubURL').value;
 
   //latex,build,bibファイル用のテンプレートを生成
-  //Buildファイルのテンプレート
+  //Buildファイル
   let latexBuild =`
     #!/bin/bash
     set -e  # エラーが出たら即終了
 
     # 変数
-    TEX_FILE="soturon.tex"  # ここにビルドしたいtexファイル名を入れる
+    TEX_FILE="${studentNumber}_${name}_卒業論文.tex"  # ここにビルドしたいtexファイル名を入れる
 
     # コンパイル
     lualatex "$TEX_FILE"
@@ -31,10 +33,8 @@ form.addEventListener('submit', function(e) {
     echo "PDFビルド完了!" 
   `;
 
-  
-
-    //latexファイルのテンプレート
-    let latexTemplate = `
+  //latexファイルのテンプレート
+  let latexTemplate = `
     \\documentclass[a4paper,12pt]{article}
     \\usepackage{luatexja} % 日本語対応
     \\usepackage{graphicx} % 画像挿入用
@@ -86,41 +86,57 @@ form.addEventListener('submit', function(e) {
     \\end{thebibliography}
     
     \\end{document}
-    `.trim(); //最初と最後の空白を消す
+  `.trim(); //最初と最後の空白を消す
 
-    // 入力の要素を取得
+  // READMEファイル
+  let README = `
+    # 卒論\n 
+    - 卒論のREADMEです。
+  `.trim();
 
-  // コンソールに表示
-  console.log(tittle);
-  console.log(name);
-  console.log(studentNumber);
-  console.log(teacherName);
-  console.log(githubUrl);
+  // 送信するデータをオブジェクトにまとめる
+  const userData = {
+    latexTemplate:latexTemplate,
+    latexBuild:latexBuild,
+    README: README,
+    name: name,  // 名前
+    studentNumber: studentNumber,  // 学籍番号
+    githubUrl: githubUrl,  // GitHub URL
+  }
 
-  //latexファイルの生成
-  //空のzipファイルオブジェクトを生成
-  const zip = new JSZip();
-  
-  //zipファイルにディレクトリ作成
-  const folder = zip.folder("soturon");
+  // Fetch APIを使用して非同期通信を行う
+  // urlにhttpリクエストを送信する
+  fetch('/process-data', {
+    method: 'POST',  // POSTリクエストオプション
+    //リクエスト
+    headers: { //サーバーに送るメタ情報
+        'Content-Type': 'application/json'  // JSON形式で送信
+    },
+    // サーバーに送るデータ
+    body: JSON.stringify(userData)  // データをJSON形式で送信
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.blob(); // ZIP ファイルを Blob として取得
+  })
+  .then(blob => {
+    // Blob を URL に変換
+    const url = window.URL.createObjectURL(blob);
 
-  // zipにファイルを追加する、file(ファイル名、中身)
-  folder.file(`soturon.tex`, latexTemplate);
-  folder.file(`build.sh`, latexBuild);
-  folder.file("説明書.txt", "これは説明書です");
+    // ダウンロードリンクを作成してクリックをトリガー
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `soturon.zip`; // ダウンロード時のファイル名
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
 
-  //zipを生成する
-  //zipファイル生成を非同期で行う、blobはブラウザで保存できるファイル
-  zip.generateAsync({ type: "blob" })
-  //非同期処理の後に実行(今回はzipファイル生成後)、contentにはzipファイルが入る
-    .then(function(content) {
-      // ブラウザでダウンロードできるようにする
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(content);
-      link.download = `soturon.zip`; // ダウンロードファイル名
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-    });
+    // URL を解放
+    window.URL.revokeObjectURL(url);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
 });

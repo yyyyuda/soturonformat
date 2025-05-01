@@ -4,39 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>論文フォーマット作成</title>
-  <link rel="stylesheet" href="style.css">
-  <!--ZIPjsのダウンロード-->
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <form action="#" method="post">
+  <form method="post" >
+  
     <!-- タイトル入力 -->
     <div>
       <label for="soturontittle">卒論タイトル:</label>
-      <input type="text" id="soturontittle" name="soturontittle">
+      <input type="text" id="soturontittle" name="soturontittle" autocomplete="soturontittle">
     </div>
+
     <!-- 氏名入力 -->
     <div>
       <label for="name">氏名：</label>
-      <input type="text" id="name" name="name" required>
+      <input type="text" id="name" name="name" autocomplete="name" required>
     </div>
 
     <!-- 学籍番号入力 -->
     <div>
       <label for="studentNumber">学籍番号：</label>
-      <input type="text" id="studentNumber" name="studentNumber" required>
+      <input type="text" id="studentNumber" name="studentNumber" autocomplete="studentNumber" required>
     </div>
 
     <!-- 担当教員名入力 -->
     <div>
       <label for="teacherName">担当教員名：</label>
-      <input type="text" id="teacherName" name="teacherName">
+      <input type="text" id="teacherName" name="teacherName" autocomplete="teacherName" required>
     </div>
 
-    <!-- GitHub URL入力 -->
+    <!-- GitHub URL-->
     <div>
-      <label for="githubUrl">GitHubのURL:</label>
-      <input type="url" id="githubUrl" name="githubUrl" required>
+      <label for="GitHubURL">GitHub URL</label>
+      <input type="text" id="GitHubURL" name="GitHubURL" autocomplete="GitHubURL">
     </div>
 
     <!-- 送信ボタン -->
@@ -44,9 +44,8 @@
       <button id="button" type="submit">送信</button>
     </div>
   </form>
-  <script 
-  src="main.js"
-  type="module"></script>
-  </script>
+
+  <!-- スクリプト -->
+  <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
 </body>
 </html>
