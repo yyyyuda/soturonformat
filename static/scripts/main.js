@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 // フォーム要素を取得
 const form = document.querySelector('form');
 
@@ -140,3 +140,4 @@ form.addEventListener('submit', function(e) {
     console.error('Error:', error);
   });
 });
+*/
