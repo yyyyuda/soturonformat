@@ -30,11 +30,15 @@ label {
 
 input[type="text"],
 input[type="url"] {
-  width: 100%;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 5px;
   box-sizing: border-box;
+}
+
+textarea{
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
 }
 
 button {
@@ -51,3 +55,22 @@ button {
 button:hover {
   background-color: #45a049;
 }
+
+label.required::after{
+  content: " *";
+  color: red;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+#firstNameKanji,#lastNameKanji,#firstNameKana,#lastNameKana {
+  width: 20%;
+}
+
+.name{
+  display: inline;
+  margin-left: 10px;
+}
+
+
+

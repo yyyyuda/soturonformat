@@ -7,36 +7,103 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <form method="post" >
+  <form method="post" action="/process-data">
   
     <!-- タイトル入力 -->
     <div>
-      <label for="soturontittle">卒論タイトル:</label>
-      <input type="text" id="soturontittle" name="soturontittle" autocomplete="soturontittle">
+      <label for="soturontittle">卒論タイトル</label>
+      <textarea type="text" id="title" name="title" rows="3" autocomplete="soturontittle" placeholder="卒論タイトル"></textarea>
     </div>
 
     <!-- 氏名入力 -->
+    <!-- 氏名（漢字） -->
     <div>
-      <label for="name">氏名：</label>
-      <input type="text" id="name" name="name" autocomplete="name" required>
+      <label class="required">氏名（漢字）</label>
+      <label for="firstNameKanji" class="name">姓 :</label>
+      <input type="text" id="firstNameKanji" name="firstNameKanji" required pattern="^[一-龯]+$" autocomplete="given-name" placeholder="京産">
+
+      <label for="lastNameKanji" class="name">名 :</label> :</label>
+      <input type="text" id="lastNameKanji" name="lastNameKanji" required pattern="^[一-龯]+$" autocomplete="family-name" placeholder="太郎">
+      
+    </div>
+
+    <!-- 氏名（カナ） -->
+    <div>
+      <label class="required">氏名（カナ）</label>
+      <label for="firstNameKana" class="name">セイ :</label>
+      <input type="text" id="firstNameKana" name="firstNameKana" required pattern="^[ァ-ンー]+$" autocomplete="given-name" placeholder="キョウサン">
+
+      <label for="lastNameKana" class="name">メイ :</label>
+      <input type="text" id="lastNameKana" name="lastNameKana" required pattern="^[ァ-ンー]+$" autocomplete="family-name" placeholder="タロウ">
+
     </div>
 
     <!-- 学籍番号入力 -->
     <div>
-      <label for="studentNumber">学籍番号：</label>
-      <input type="text" id="studentNumber" name="studentNumber" autocomplete="studentNumber" required>
+      <label for="studentNumber" class="required">学籍番号(半角数字)</label>
+      <input type="text" id="studentNumber" name="studentNumber" autocomplete="studentNumber" required pattern="^\d+$" placeholder="123456">
+    </div>
+
+    <!-- 学部・学科選択 -->
+    <div>
+      <label for="faculty" class="required">学部・学科</label>
+      <select name="faculty" required>
+      <option value="">-- 学科を選択してください --</option>
+      <optgroup label="生命科学部">
+        <option value="生命科学部 先端生命科学科">先端生命科学科</option>
+        <option value="生命科学部 産業生命科学科">産業生命科学科</option>
+      </optgroup>
+
+      <optgroup label="文化学部">
+        <option value="文化学部 京都文化学科">京都文化学科</option>
+        <option value="文化学部 国際文化学科">国際文化学科</option>
+      </optgroup>
+
+      <optgroup label="理学部">
+        <option value="理学部 数理科学科">数理科学科</option>
+        <option value="理学部 物理科学科">物理科学科</option>
+        <option value="理学部 宇宙物理・気象学科">宇宙物理・気象学科</option>
+      </optgroup>
+
+      <optgroup label="情報理工学部">
+        <option value="情報理工学部 情報理工学科">情報理工学科</option>
+      </optgroup>
+
+      <optgroup label="現代社会学部">
+        <option value="現代社会学部 現代社会学科">現代社会学科</option>
+        <option value="現代社会学部 健康スポーツ社会学科">健康スポーツ社会学科</option>
+      </optgroup>
+
+      <optgroup label="国際関係学部">
+        <option value="国際関係学部 国際関係学科">国際関係学科</option>
+      </optgroup>
+
+      <optgroup label="外国語学部">
+        <option value="外国語学部 英語学科">英語学科</option>
+        <option value="外国語学部 ヨーロッパ言語学科">ヨーロッパ言語学科</option>
+        <option value="外国語学部 アジア言語学科">アジア言語学科</option>
+      </optgroup>
+
+      <optgroup label="経済学部">
+        <option value="経済学部 経済学科">経済学科</option>
+      </optgroup>
+
+      <optgroup label="経営学部">
+        <option value="経営学部 マネジメント学科">マネジメント学科</option>
+      </optgroup>
+
+      <optgroup label="法学部">
+        <option value="法学部 法律学科">法律学科</option>
+        <option value="法学部 法政策学科">法政策学科</option>
+      </optgroup>
+    </select>
+
     </div>
 
     <!-- 担当教員名入力 -->
     <div>
-      <label for="teacherName">担当教員名：</label>
-      <input type="text" id="teacherName" name="teacherName" autocomplete="teacherName" required>
-    </div>
-
-    <!-- GitHub URL-->
-    <div>
-      <label for="GitHubURL">GitHub URL</label>
-      <input type="text" id="GitHubURL" name="GitHubURL" autocomplete="GitHubURL">
+      <label for="teacherName">担当教員名</label>
+      <input type="text" id="teacherName" name="teacherName" autocomplete="teacherName" placeholder="玉田 春昭">
     </div>
 
     <!-- 送信ボタン -->
@@ -46,6 +113,5 @@
   </form>
 
   <!-- スクリプト -->
-  <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
 </body>
 </html>
