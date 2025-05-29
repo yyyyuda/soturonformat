@@ -16,6 +16,7 @@ UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# 年度を取得する関数
 def get_fiscal_year(month,year):
     if month < 4:
         year -= 1
@@ -30,6 +31,7 @@ def index():
 @app.route('/process-data', methods=['POST'])
 def process_data():
 
+    # フォームデータの取得
     firstNameKanji = request.form.get('firstNameKanji', '')
     lastNameKanji = request.form.get('lastNameKanji', '')
     lastNameKana = request.form.get('lastNameKana', '')
@@ -38,6 +40,8 @@ def process_data():
     studentNumber = request.form.get('studentNumber', '')
     teacherName = request.form.get('teacherName', '')
     faculty = request.form.get('faculty', '')
+
+    # 日付の取得
     year = datetime.now().year  #  年を取得
     month = date.today().month # 月を取得
     year = get_fiscal_year(month,year)  # 年度を取得
@@ -52,7 +56,7 @@ def process_data():
     readme_template = env.get_template('README.md')
     build_template = env.get_template('pdf_build.sh')
 
-    # テンプレートに埋め込み
+    # texテンプレートに埋め込み
     rendered_tex = tex_template.render(
             firstName=firstNameKanji,
             lastName=lastNameKanji,
@@ -63,6 +67,7 @@ def process_data():
             year=year  
         )
     
+    # READMEテンプレートに埋め込み
     rendered_readme = readme_template.render(
         firstNameKanji=firstNameKanji,
         lastNameKanji=lastNameKanji,
@@ -71,10 +76,12 @@ def process_data():
         year=year,
      )
     
+    # buildファイルテンプレートに埋め込み
     rendered_build = build_template.render(
         repo_name=repo_name
     )
 
+    # ファイル名と内容の辞書を作成
     files = {
     'thesis.tex': rendered_tex,
     'README.md': rendered_readme,
@@ -110,7 +117,8 @@ def process_data():
         for filename, content in files.items():
             with open(os.path.join(repo_path, filename), 'w') as f:
                 f.write(content)
-
+        
+        # ファイルの追加
         with open('format/csg-thesis.sty', 'r') as f: 
             sty = f.read()
         with open(os.path.join(repo_path, 'csg-thesis.sty'), 'w') as f:

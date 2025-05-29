@@ -1,7 +1,64 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #f0f2f5;
-  padding: 40px;
+  padding: 60px;
+}
+
+.header{
+  background-color:  rgb(15, 17, 17);
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  text-align: center;
+  flex-direction: row;
+  height: 50px;
+}
+
+.header-flex{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 46px;
+}
+
+.header-one{
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.header-two{
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.header-two a{
+  color: white;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-right: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+.header a:hover{
+  color: rgb(204, 229, 232);
+  text-decoration: underline;
+  text-decoration-color: rgb(204, 229, 232);
 }
 
 h1 {
@@ -44,16 +101,16 @@ textarea{
 button {
   width: 100%;
   padding: 12px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: #f9e108;
+  color: black;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #edcd14;
 }
 
 label.required::after{
