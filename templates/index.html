@@ -7,6 +7,19 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+
+  <div class="header">
+    <div class="header-flex">
+      <div class="header-one">
+        <p>format</p>
+      </div>
+      <div class="header-two">
+        <a src="/templates/index.html" target="_">生徒用</a>
+        <a src="/templates/teacher.html" target="_">先生用</a>
+      </div>
+    </div>
+  </div>
+
   <form method="post" action="/process-data">
   
     <!-- タイトル入力 -->
