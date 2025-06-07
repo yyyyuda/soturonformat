@@ -9,9 +9,31 @@
 %
 % 12pt にするのは最終手段
 %
-\documentclass[jlreq,12pt,twoside,openany]{jbook}
+\documentclass[jlreq,12pt,twoside]{jbook}
 \usepackage{csg-thesis} % 論文テンプレートパッケージ
-\usepackage{graphicx,url} % 画像挿入やURL表示用
+\usepackage{url} % 画像挿入やURL表示用
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{listings,jvlisting} %日本語のコメントアウトをする場合
+
+%ここからソースコードの表示に関する設定
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
 
 
 
@@ -53,16 +75,9 @@
 
 % 概要
 \begin{abstract}
-% ここに400〜600字文字程度の日本語概要を書く．
+% ここに400〜600字文字程度の概要を書く．
 
-本稿は、プログラム分散化のためのアスペクト指向言語（AOP）であるAddistant%
-を拡張した、Addistant 2を提案する。Addistantは、利用者が分散に関する記述
-を独自のアスペクト指向言語で指定することにより、単一のJava仮想機械（JVM）
-上で実行することを目的として開発した既存プログラムを、利用者が望む形で機
-能分散化を導入する。この分散化はロード時に、バイトコードレベルで行われる。
-Addistant 2は、分散アスペクトの記述力が十分ではなかったAddistantを、分散
-アスペクトのJoin pointの種類を増加することにより、大幅に分散アスペクトの
-記述力を強化した。また、本稿はAddistant 2の典型的な利用方法の例も示す。
+本稿は，京都産業大学の卒業論文を執筆する際の注意点等をまとめたものである. LATEX と専用のスタイルファイルを用いた場合の論文フォーマットに関する指針，および論文の内容に関してするべきこと，するべきでないことをまとめたべからずチェックリストからなる.本稿自体も LATEX と専用のスタイルファイルを用いて執筆されているため，論文執筆の際に参考になれば幸いである.
 \end{abstract}
 
 % 謝辞
@@ -101,131 +116,291 @@ Addistant 2は、分散アスペクトの記述力が十分ではなかったAdd
 %
 \chapter{はじめに}
 %\pagenumbering{arabic}  %% ページ番号をアラビア数字に変更
+%この章では以下のことを記述する
+%研究背景と動機
+%先行研究の問題点・ギャップの明示
+%本研究の目的・貢献
+%研究の意義・期待される効果
+%論文全体の構成
 
-今日、分散ソフトウェア、つまり複数の計算機上で動作するソフトウェアの必要
-性が高まる一方、その開発にかかるコストが問題になっている。これは、分散プ
-ログラムを作成する場合にネットワークなどの分散環境特有の問題に対処しなけ
-ればならないためである。それらの処理の記述を含んだ分散プログラムは煩雑に
-なり、非分散プログラムの作成に比べて、分散プログラムの作成や維持にかかる
-人的コストは飛躍的に大きくなりがちである。
+本ドキュメントは、フォーマットツールを使って配布した京都産業大学の卒業論文・修士論文用の\texttt{thesis.tex} とビルド用スクリプトなどを一式まとめ、「どのように使うのか」を解説するガイドです.
 
-分散プログラミングが煩雑であることの要因として、プログラムの分散に無関係
-な記述の中に分散に関わる処理が拡散して入り交じっている（crosscutting
-concerns）ことがあげられる。このようなプログラムは可読性が低く、変更も大
-変である。分散に無関係な記述が分かりにくくなる上、分散に関わる処理を変更
-するためにはプログラムのあちこちを修正しなければならなくなる。
+初めて \LaTeX を扱う学生さんや、ローカルで自動ビルド環境を整えたい方もこのガイドに沿って作業すれば、正しく PDF を出力できるように構成しています.
 
-我々は分散プログラミングをアスペクト指向言語（AOP）により支援する 
-Addistant を開発してきた。ここで、アスペクト指向とは、オブジェクト指向と
-の相補性を意識した概念である。オブジェクト指向とは、機能性という点に着目
-して全体をオブジェクトと呼ばれるモジュールに分割していく概念である。しか
-し、個々のモジュール内には、同様の処理が股がる可能性がある。この個々のモ
-ジュールに股がった同様な処理を、オブジェクトとは別の側面から考慮し、それ
-をモジュール化する概念を{\bf{アスペクト指向}} といい、そのモジュールを
-{\bf{アスペクト}}という。
-
-Addistant は次の特徴をもつ。
-%
-\begin{itemize}
-\item{
-Addistant の利用者に、各クラスごとそのオブジェクトを分散環境中のどこに配
-置するかを指定させる。Addistant では、分散に関わる処理がプログラム全体に
-拡散して入り交じることを避けるため、利用者は、分散に無関係な記述である非
-分散プログラムとは別に、分散に関わる記述をまとめて記述する。このまとめて
-別に書かれた分散に関わる記述を{\bf{分散アスペクト}}と呼ぶ。
-}
-\item{
-対象プログラムのバイトコードを変換して、分散アスペクトによって指定された
-クラスが、遠隔ホストで動作している Java 仮想機械（JVM）上で実行されるよ
-うにする。Addistant は変換のために、対象プログラムのソースコードを必要と
-しない。変換されたバイトコードは正規の Java バイトコードであり、実行のた
-めに特別な JVM を必要としない。バイトコード変換には 
-Javassistを用いた。
-}
-\item{
-変換されたバイトコードを Addistant の実行系により遠隔 JVM に自動的に
-配布される。
-}
-\end{itemize}
-%
+\vspace{2zh}
 \noindent
-Addistant では、遠隔オブジェクト参照を、従来の分散プログラミング・ツール
-で使われてきたアイディアを組み合わせて実現した。この実装は、{\bf{プロキ
-シ・マスタ方式}}に基づいたもので、Addistant がバイトコード変換により自動
-的に行う。
-
-しかしながら、Addistant では、開発が進むにつれ、その利点とともに問題点も
-明らかになってきた。その問題点とは、分散アスペクトの記述力が十分ではなかっ
-たため、利用者が望む機能分散をうまく実現できない場合があることである。
-
-そこで我々は、Addistant の分散アスペクトの記述力を大幅に高めたAddistant
-2を開発中である。本稿では Addistant 2 の典型的な利用方法の例をあげ、分
-散アスペクトの新しい記述方法を説明する。
-
-本稿の残りは、次のような構成からなっている。（以下では、Addistant を
-Addistant 1 と呼ぶ。）
-第 2 章は 分散プログラミング用アスペクト言語の
-必要性と Addistant 1 の性能を述べる。
-第 3 章では、Addistant 2 の分散アスペクト記述を、
-第 4 章では、Addistant 2 のこれまでの実装、
-第 5 章では、Addistant 2 を利用したソフトウェアの機能分散例、
-第 6 章では、関連研究を、そして
-第 7 章でまとめを述べる。
-
-%%%%
-\chapter{関連研究}
-
-\section{Javassist}
-
-% 引用の例
-Javassist~\cite{Chiba2000,Chiba2001a}は...
-
-Javassistは\cite{Javassist}で配布されている。
-
-\section{Addistant}
+\textbf{注意：}
+\begin{itemize}
+  \item 本ドキュメント（ガイド）はあくまでサンプルです。自分の環境やファイル名に合わせて適宜編集してください.また、京都産業大学や教授から指定されているファイルや執筆方法がある場合は、そちらに従ってください
+  \item フォルダ名・ファイル名に日本語や空白文字を含むと、コンパイルエラーが起こることがあります.
+        可能な限り半角英数字＋アンダースコア（\texttt{\_}）のみをご利用ください。
+\end{itemize}
 
 
 %%%%
-\chapter{Addistant 2 - 記述力強化版}
+\chapter{ファイル構成}
+以下はダウンロードしたzipファイルに含まれているファイル構成である.
+また、ディレクトリには git init が適応されており、ローカルのgithubリポジトリが作成されている.
+\begin{itemize}
+    \item \texttt{csg-thesis.sty} : 必須のスタイルファイ
+    \item \texttt{csg-thesis.bst} : 日本語文献を含む参考文献リストのフォーマット
+    \item \texttt{javassist.eps} : 図の一例
+    \item \texttt{latexmkrc} : overleafなどで自動ビルトする latexmk の設定ファイル
+    \item \texttt{llmk.toml} : texファイルをPDFに変換するビルドスクリプト
+    \item \texttt{README.md} : 卒論の概要・締め切りなどまとめたREADME
+    \item \texttt{thesis.bib} : 参考文献データベース
+    \item \texttt{thesis.tex} : 卒業論文テンプレート
+    \item \texttt{thesis.pdf} :  卒業論文テンプレート(pdf)
+\end{itemize}
+
 
 %%%%
-\chapter{実装}
+\chapter{latexのインストール}
 
-% 図の例
-\begin{figure}[tb]
- \begin{center}
-  \includegraphics[width=10cm]{javassist.eps}
-  \caption{Javassistの処理の流れ}
-  \label{fig:javassist}
- \end{center}
+詳細は \url{(https://texwiki.texjp.org/?TeX%20Live%2FMac#install)} をご覧ください．
+数ギガバイト単位のファイルをダウンロードするため，テザリング状態では実行しないようにしてください．
+
+GUIありの場合
+\begin{lstlisting}[caption=hoge,label=fuga]
+brew install --cask mactex
+sudo tlmgr update --self --all
+sudo tlmgr paper a4
+\end{lstlisting}
+
+GUIなしの場合
+\begin{lstlisting}[caption=hoge,label=fuga]
+brew install --cask basictex
+sudo tlmgr update --self --all
+sudo tlmgr paper a4
+sudo tlmgr install collection-langjapanese
+\end{lstlisting}
+
+\chapter{Overleaf 上でのセットアップ手順}
+Overleaf とは LaTeX 専用のオンラインエディタです． 環境構築不要で使用でき，便利な機能を沢山備えている.
+卒論の執筆にOverleafを利用する場合は、以下の手順に従ってください.
+\section{Overleafのプロジェクト作成}
+\begin{enumerate}
+  \item Overleaf (\url{https://ja.overleaf.com})にログインし、左上の「新規プロジェクト」→「空のプロジェクト」を選択する.
+  \item プロジェクト名を入力し、作成する.
+  \item 左側のファイル一覧に自動で \texttt{main.tex} が作られる.既存の \texttt{main.tex} を右クリックして「削除」を選び、削除する.
+\end{enumerate}
+
+\section{ファイルのアップロードと設定}
+\begin{enumerate}
+  \item 左上のメニューの下にある「 $\uparrow$ (アップロード)」ボタンをクリック.
+  \item PC上に用意した以下のファイルをドラッグ＆ドロップする : 
+    \begin{itemize}
+      \item \texttt{csg-thesis.sty}
+      \item \texttt{csg-thesis.bst}
+      \item \texttt{latexmkrc}
+      \item \texttt{thesis.bib}
+      \item \texttt{thesis.tex}
+      \item \texttt{images}
+    \end{itemize}
+   \item 左上のメニューボタンをクリック.設定のコンパイラをLaTexに変更する.主要文書がthesis.texになっていることも確認する.
+\end{enumerate}
+
+\section{Overleaf 上でのコンパイル}
+右上のコンパイルボタンを押す. または、Mac なら \texttt{command + S}、Windows なら \texttt{Ctrl + S}のショートカットを使う.
+
+また、標準クラスに\texttt{jbook}が適応されている.このクラスは、冊子体・書籍体のレイアウトを前提にレイアウトされるので、コンパイルするとページ番号が左右に現れたり、空白ページが現れる.一般的なデザインにしたいのならば、12行目の\texttt{jbook}を\texttt{report}に変更する.
+
+\chapter{本文の書き方}
+卒論執筆のために編集しなければいけないファイルは `thesis.tex` と `thesis.bib` の2つです．
+`thesis.tex`に，卒論の本文を，`thesis,bib`には参考文献を $BibTeX$形式で記入します．
+
+\section{表紙}
+以下の項目はフォームの入力より反映している.未入力や変更部分があるならば、以下に従って入力する.
+\begin{description}
+  \item[\texttt{\textbackslash title\{...\}}] :\\論文の正式タイトルを入力する。長い場合は適宜 \verb|\\|    （改行）してもよい.
+  \item[\texttt{\textbackslash degree\{...\}}] : \\学士論文なら \texttt{学士}、修士論文なら \texttt{修士} と記述する.
+  \item[\texttt{\textbackslash author\{...\}}]: \\著者（執筆者）の氏名をフルネームで記入する.必要に応じて和文と欧文を使い分ける。姓と名の間は空白を入れる.
+  \item[\texttt{\textbackslash date\{...\}}] :\\提出日を「YYYY年M月D日」の形式で記載する。省略するとコンパイル日時が自動挿入されるが、指定することを推奨する。
+  \item[\texttt{\textbackslash schoolyear\{...\}}]: \\卒業年度を「YYYY 年」の形式で記入する.
+  \item[\texttt{\textbackslash department\{...\}}] :\\所属学部・学科名を正確に記述する.
+  \item[\texttt{\textbackslash stnumber\{...\}}] :\\学籍番号を数字のみで入力する.
+  \item[\texttt{\textbackslash supervisor\{...\}}] :\\指導教員の氏名と肩書を「氏名 教授」の形式で記載する.
+\end{description}
+
+\section{本文の記述}
+プリアンブル部以下で \verb|\begin{document}| ～ \verb|\end{document}| の間に
+章や節を記述する。
+
+\section{章・節の追加/編集}
+\begin{itemize}
+  \item 必要に応じて \verb|\chapter{章タイトル}|、\verb|\section{節タイトル}| を増減し、
+        自分の論文構成に合わせて編集する.
+  \item 章や節を追加した場合、目次や図表目次は自動更新されるため、
+        余計な手作業は不要である.
+\end{itemize}
+
+
+\chapter{相互参照}
+相互参照は，通常の LATEX 文書と同様に，\verb|\label| コマンドと\verb|\ref| コマンドを用いて行います.例えば，章番号を参照する場合には，以下のように \verb|\chapter| コマンドの直後に \verb|\label| コマンドを配置してラベルを宣言します.
+\begin{lstlisting}
+    \chapter{first}  
+    \label{chap:intro}
+\end{lstlisting}
+
+その上で，参照したい箇所に，\verb|\ref| コマンドを以下のように配置します.
+\begin{lstlisting}
+    \ref{chap:intro} 章では，本利用説明書の位置づけについて述べています.
+\end{lstlisting}
+
+\verb|\ref{chap:intro}| は実際の章番号に置換されて，以下のように組版されます. 
+
+\vspace{1em}
+1 章では，本利用説明書の位置づけについて述べています.
+
+\vspace{1em}
+詳しくは，本利用説明書内の利用例および，LATEX2e 美文書作成入門 [1] の第 10 章 などを参照してください.
+
+
+
+\chapter{図の挿入}
+図目次は、図を作成すると自動的に作成されるので操作する必要はない.
+\begin{enumerate}
+  \item 画像ファイルをEPS形式（platex コンパイル時）または PDF/PNGでimagesディレクトリの中に用意する.
+  \item 本文中に以下のように記述する（ファイル名が \texttt{javassist.eps} の例）。
+\end{enumerate}
+
+\begin{lstlisting}[language=TeX]
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{images/javassist.eps}
+    \caption{sample}
+    \label{fig:sample}
+\end{figure}
+\end{lstlisting}
+
+画像のパスを\verb|\includegraphics[width=0.5\linewidth{...}| の ...に記述する
+
+\vspace{1em}
+\verb|\caption{}| には図の説明文を記述する
+
+\vspace{1em}
+相互参照をするために、\verb|\label{fig:sample}| を使ってラベル付けを行い。\verb|\ref{fig:sample}| を使って図を参照する
+\newpage
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\linewidth]{images/javassist.eps}
+  \caption{sample}
+  \label{fig:sample}
 \end{figure}
 
-図~\ref{fig:javassist}は...
+図\ref{fig:sample}より、...
 
-%%%%
-\chapter{実験}
 
-% 表の例
-\begin{table}[tb]
- \begin{center}
-  \caption{Addistant 2の実行時間(秒)}
-  \label{tab:time}
-  \begin{tabular}{lr}
-   \hline
-                   & 時間 \\
-   \hline
-   X Window System & 15.0 \\
-   Addistant 1     &  3.0 \\
-   Addistant 2     &  2.0 \\
-   \hline
+
+
+\chapter{表の挿入}
+表目次は、表を作成すると自動的に作成されるので操作する必要はない.
+
+表を作成するときは、本文中に以下のように記述する.
+
+\begin{lstlisting}
+\begin{table}[h]
+  \centering
+  \caption{sample}
+  \label{tab:sample}
+  \begin{tabular}{|l||c|r|}
+    \hline
+    left & center  & right \\
+    \hline
+    A      & B     & C      \\
+    D      & E     & F      \\
+    \hline
   \end{tabular}
- \end{center}
 \end{table}
+\end{lstlisting}
 
-表~\ref{tab:time}は...
+\verb|\caption{}| には表の説明文を記述する.
 
-%%%%
+\vspace{1em}
+相互参照をするために、\verb|\label{tab:sample}| を使ってラベル付けを行い。\verb|\ref{tab:sample}| を使って表を参照する.
+
+\vspace{1em}
+\verb|\begin{tabular}| ... \verb|\end{tabular}|に表の内容を記述する.
+
+\vspace{1em}
+\verb|\begin{tabular}{...}|で、各列の数とセルの位置、縦線を決める.
+
+l、c、rがそれぞれ左寄せ、中央揃え、右寄せ列の作成する.「｜」でセルの間の縦線の数を決める(なくても良い).
+
+\vspace{1em}
+表の上下などに水平線を引く場合は、\verb|\hline|を使う.
+
+\vspace{1em}
+各行は「セル内容 \verb|&| セル内容 \verb|&| セル内容 \verb|\\|（改行）」で作成する.
+
+これらを用いると以下のように組版される.
+\newpage
+
+\begin{table}[h]
+  \centering
+  \caption{sample}
+  \label{tab:sample}
+  \begin{tabular}{|l||c|r|}
+    \hline
+    left & center  & right \\
+    \hline
+    A      & B     & C      \\
+    D      & E     & F      \\
+    \hline
+  \end{tabular}
+\end{table}
+表\ref{tab:sample}より、...
+
+
+\chapter{参考文献}
+\begin{enumerate}
+  \item 参考文献データベース \texttt{thesis.bib}を BibTeX 形式で文献情報を記述する.
+  \item texファイル中の
+  \begin{verbatim}
+  \bibliographystyle{csg-thesis}
+  \bibliography{thesis}
+  \end{verbatim}
+  はそのまま変更せず、\texttt{thesis.bib} を編集する。
+
+  
+  \item texファイルの本文中で引用したい箇所に \verb|\cite{キー}| を書く。
+\end{enumerate}
+引用すると関連図書の章に参考文献が記述される.以下がその例である.
+
+ \vspace{1em}
+「Javaバイトコード変換による構造リフレクションの実現」\cite{Chiba2000}
+
+
+\chapter{PDFの生成}
+\texttt{llmk.toml}と\texttt{thesis.tex}があるディレクトリの階層までカレントディレクトリを移動し、以下のコマンドを実行することで \texttt{thesis.pdf}が作成される.
+\begin{verbatim}
+    llmk
+\end{verbatim}
+不要な中間ファイルを削除する．最終成果物は残したまま : 
+\begin{verbatim}
+    llmk -c
+\end{verbatim}
+\texttt{llmk}コマンドで作成されたすべてのファイルを削除する : 
+\begin{verbatim}
+    llmk -C
+\end{verbatim}
+    
+
+\textbf{注意：} 
+
+texファイルのファイル名を変更したらpdf化ができない.もし変更するのであれば、\texttt{llmk.toml} ファイルに書かれている内容を以下のように変更する必要がある.
+
+ \texttt{thesis.tex} $\rightarrow$ \texttt{ファイル名.tex}
+
+
 \chapter{まとめ}
+本ドキュメントでは、卒業論文テンプレート
+（\texttt{thesis.tex}）の各項目とコンパイル手順、図表挿入や文献管理の方法を解説した。
+実際にテンプレートをコピーして必要事項を入力し、上記手順でコンパイルを
+行っていただければ、学内要件を満たした体裁の論文が生成される。
+不明点があれば、指導教員や演習担当教員に確認のうえ、適宜修正して利用すること。
+
 
 
 
