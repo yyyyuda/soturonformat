@@ -54,7 +54,6 @@ def process_data():
     # テンプレートの取得
     tex_template = env.get_template('thesis_template.tex')
     readme_template = env.get_template('README.md')
-    build_template = env.get_template('pdf_build.sh')
 
     # texテンプレートに埋め込み
     rendered_tex = tex_template.render(
@@ -75,17 +74,11 @@ def process_data():
         title=title,
         year=year,
      )
-    
-    # buildファイルテンプレートに埋め込み
-    rendered_build = build_template.render(
-        repo_name=repo_name
-    )
 
     # ファイル名と内容の辞書を作成
     files = {
     'thesis.tex': rendered_tex,
     'README.md': rendered_readme,
-    'pdf_build.sh': rendered_build,
     }
 
     ## リポジトリ名とuploadsをパスとして結合
@@ -117,6 +110,14 @@ def process_data():
         for filename, content in files.items():
             with open(os.path.join(repo_path, filename), 'w') as f:
                 f.write(content)
+
+        # images フォルダを作成して javassist.eps をコピー
+        images_dir = os.path.join(repo_path, 'images')
+        os.makedirs(images_dir, exist_ok=True)
+        with open('format/javassist.eps', 'rb') as src, \
+            open(os.path.join(images_dir, 'javassist.eps'), 'wb') as dst:
+            dst.write(src.read())
+
         
         # ファイルの追加
         with open('format/csg-thesis.sty', 'r') as f: 
@@ -128,11 +129,6 @@ def process_data():
             bib = f.read()
         with open(os.path.join(repo_path, 'thesis.bib'), 'w') as f:
             f.write(bib)
-
-        with open('format/javassist.eps', 'r') as f:
-            eps = f.read()
-        with open(os.path.join(repo_path, 'javassist.eps'), 'w') as f:
-            f.write(eps)
         
         with open('format/csg-thesis.bst', 'r') as f:
             bst = f.read()
@@ -143,6 +139,16 @@ def process_data():
             latexmkrc = f.read()
         with open(os.path.join(repo_path, 'latexmkrc'), 'w') as f:
             f.write(latexmkrc)
+
+        with open('format/llmk.toml', 'r') as f:
+            llmk = f.read()
+        with open(os.path.join(repo_path, 'llmk.toml'), 'w') as f:
+            f.write(llmk)
+
+        with open('format/thesis.pdf', 'rb') as src,\
+            open(os.path.join(repo_path, 'theisi.pdf'), 'wb') as dst:
+            dst.write(src.read())
+
 
         # 最初のコミット
         subprocess.run(['git', 'add', '.'], cwd=repo_path)
