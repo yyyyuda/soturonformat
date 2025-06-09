@@ -1,8 +1,4 @@
-Flask @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_b4a2svwk0s/croot/flask_1702980026964/work
-Flask-Bcrypt==1.0.1
-Flask-Login==0.6.3
-Flask-SocketIO==5.4.1
-Flask-SQLAlchemy==3.1.1
-Flask-WTF==1.2.1
-python-dotenv @ file:///Users/cbousseau/work/recipes/ci_py311/python-dotenv_1677924884036/work
-romkan==0.2.1
+Flask>=2.0
+Jinja2>=3.0
+romkan>=3.0
+python-dotenv>=0.19.0  # .env を使うなら
