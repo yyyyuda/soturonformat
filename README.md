@@ -19,5 +19,3 @@
 - latexmkrc
 - thesis.bib
 
-
-
