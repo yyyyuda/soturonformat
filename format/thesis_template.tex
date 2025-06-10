@@ -1,3 +1,7 @@
+% +++
+% latex = "uplatex"
+% bibtex = "pbibtex"
+% +++
 %
 % 本稿は，卒業論文の原稿を執筆する際，注意点等をまとめたものである．論文執筆の際に参考になれば幸いである．
 %
@@ -9,7 +13,7 @@
 %
 % 12pt にするのは最終手段
 %
-\documentclass[jlreq,12pt,twoside]{jbook}
+\documentclass[jlreq,12pt,twoside]{jsreport}
 \usepackage{csg-thesis} % 論文テンプレートパッケージ
 \usepackage{url} % 画像挿入やURL表示用
 \usepackage[dvipdfmx]{graphicx}
@@ -34,9 +38,6 @@
   numbersep=1zw,
   lineskip=-0.5ex
 }
-
-
-
 
 % 題目
 % 適当に\\で区切って見やすくする
@@ -77,7 +78,9 @@
 \begin{abstract}
 % ここに400〜600字文字程度の概要を書く．
 
-本稿は，京都産業大学の卒業論文を執筆する際の注意点等をまとめたものである. LATEX と専用のスタイルファイルを用いた場合の論文フォーマットに関する指針，および論文の内容に関してするべきこと，するべきでないことをまとめたべからずチェックリストからなる.本稿自体も LATEX と専用のスタイルファイルを用いて執筆されているため，論文執筆の際に参考になれば幸いである.
+本稿は，京都産業大学の卒業論文を執筆する際の注意点等をまとめたものです．
+\LaTeX と専用のスタイルファイルを用いた場合の論文フォーマットに関する指針，および論文の内容に関してするべきこと，するべきでないことをまとめたべからずチェックリストからなります．
+本稿自体も \LaTeX と専用のスタイルファイルを用いて執筆されているため，論文執筆の際に参考になれば幸いです．
 \end{abstract}
 
 % 謝辞
@@ -123,51 +126,57 @@
 %研究の意義・期待される効果
 %論文全体の構成
 
-本ドキュメントは、フォーマットツールを使って配布した京都産業大学の卒業論文・修士論文用の\texttt{thesis.tex} とビルド用スクリプトなどを一式まとめ、「どのように使うのか」を解説するガイドです.
+本ドキュメントは，フォーマットツールを使って配布した京都産業大学の卒業論文・修士論文用の\texttt{ {{- repo_name -}}.tex} とビルド用スクリプトなどを一式まとめ，「どのように使うのか」を解説するガイドです．
 
-初めて \LaTeX を扱う学生さんや、ローカルで自動ビルド環境を整えたい方もこのガイドに沿って作業すれば、正しく PDF を出力できるように構成しています.
+初めて \LaTeX を扱う学生さんや，ローカルで自動ビルド環境を整えたい方もこのガイドに沿って作業すれば，正しく PDF を出力できるように構成しています．
 
 \vspace{2zh}
 \noindent
 \textbf{注意：}
 \begin{itemize}
-  \item 本ドキュメント（ガイド）はあくまでサンプルです。自分の環境やファイル名に合わせて適宜編集してください.また、京都産業大学や教授から指定されているファイルや執筆方法がある場合は、そちらに従ってください
-  \item フォルダ名・ファイル名に日本語や空白文字を含むと、コンパイルエラーが起こることがあります.
-        可能な限り半角英数字＋アンダースコア（\texttt{\_}）のみをご利用ください。
+  \item 本ドキュメント（ガイド）はあくまでサンプルです．自分の環境やファイル名に合わせて適宜編集する必要があります．また，京都産業大学や教授から指定されているファイルや執筆方法がある場合はそちらに従ってください．
+  \item フォルダ名・ファイル名に日本語や空白文字を含むと，コンパイルエラーが起こることがあります．
+        可能な限り半角英数字＋アンダースコア（\texttt{\_}）のみをご利用ください．
 \end{itemize}
 
 
 %%%%
 \chapter{ファイル構成}
-以下はダウンロードしたzipファイルに含まれているファイル構成である.
-また、ディレクトリには git init が適応されており、ローカルのgithubリポジトリが作成されている.
+
+以下はダウンロードしたzipファイルに含まれているファイル構成です．
+また，ディレクトリは Git リポジトリになっており（\texttt{git init} が実行済み），
+リモートの GitHub の Git リポジトリの設定もされています．
+つまり，\texttt{git commit}で保存した内容を，\texttt{git push}でリモートリポジトリに反映させられます．
+
 \begin{itemize}
     \item \texttt{csg-thesis.sty} : 必須のスタイルファイ
     \item \texttt{csg-thesis.bst} : 日本語文献を含む参考文献リストのフォーマット
-    \item \texttt{javassist.eps} : 図の一例
     \item \texttt{latexmkrc} : overleafなどで自動ビルトする latexmk の設定ファイル
     \item \texttt{llmk.toml} : texファイルをPDFに変換するビルドスクリプト
     \item \texttt{README.md} : 卒論の概要・締め切りなどまとめたREADME
-    \item \texttt{thesis.bib} : 参考文献データベース
-    \item \texttt{thesis.tex} : 卒業論文テンプレート
-    \item \texttt{thesis.pdf} :  卒業論文テンプレート(pdf)
+    \item \texttt{ {{- repo_name -}}.bib} : 参考文献データベース
+    \item \texttt{ {{- repo_name -}}.tex} : 卒業論文テンプレート
+    \item \texttt{ {{- repo_name -}}.pdf} :  卒業論文テンプレート（このファイル）
+    \item \texttt{images/javassist.eps} : 図の一例
 \end{itemize}
 
 
 %%%%
-\chapter{latexのインストール}
+\chapter{\LaTeX のインストール}
 
 詳細は \url{(https://texwiki.texjp.org/?TeX%20Live%2FMac#install)} をご覧ください．
-数ギガバイト単位のファイルをダウンロードするため，テザリング状態では実行しないようにしてください．
+数ギガバイト単位のファイルをダウンロードするため，テザリング状態では実行しないように注意してください．
 
-GUIありの場合
+\paragraph{GUIありの場合}
+
 \begin{lstlisting}[caption=hoge,label=fuga]
 brew install --cask mactex
 sudo tlmgr update --self --all
 sudo tlmgr paper a4
 \end{lstlisting}
 
-GUIなしの場合
+\paragraph{GUIなしの場合}
+
 \begin{lstlisting}[caption=hoge,label=fuga]
 brew install --cask basictex
 sudo tlmgr update --self --all
@@ -176,92 +185,108 @@ sudo tlmgr install collection-langjapanese
 \end{lstlisting}
 
 \chapter{Overleaf 上でのセットアップ手順}
-Overleaf とは LaTeX 専用のオンラインエディタです． 環境構築不要で使用でき，便利な機能を沢山備えている.
-卒論の執筆にOverleafを利用する場合は、以下の手順に従ってください.
+
+Overleaf とは \LaTeX 専用のオンラインエディタです． 環境構築不要で使用でき，便利な機能を沢山備えています．
+卒論の執筆にOverleafを利用する場合は，以下の手順に従ってください．
+
 \section{Overleafのプロジェクト作成}
+
 \begin{enumerate}
-  \item Overleaf (\url{https://ja.overleaf.com})にログインし、左上の「新規プロジェクト」→「空のプロジェクト」を選択する.
-  \item プロジェクト名を入力し、作成する.
-  \item 左側のファイル一覧に自動で \texttt{main.tex} が作られる.既存の \texttt{main.tex} を右クリックして「削除」を選び、削除する.
+  \item Overleaf (\url{https://ja.overleaf.com})にログインし，左上の「新規プロジェクト」→「空のプロジェクト」を選択する．
+  \item プロジェクト名を入力し，作成する.
+  \item 左側のファイル一覧に自動で \texttt{main.tex} が作られる．既存の \texttt{main.tex} を右クリックして「削除」を選び，削除する．
 \end{enumerate}
 
 \section{ファイルのアップロードと設定}
+
 \begin{enumerate}
-  \item 左上のメニューの下にある「 $\uparrow$ (アップロード)」ボタンをクリック.
+  \item 左上のメニューの下にある「 $\uparrow$ (アップロード)」ボタンをクリックする．
   \item PC上に用意した以下のファイルをドラッグ＆ドロップする : 
     \begin{itemize}
       \item \texttt{csg-thesis.sty}
       \item \texttt{csg-thesis.bst}
       \item \texttt{latexmkrc}
-      \item \texttt{thesis.bib}
-      \item \texttt{thesis.tex}
+      \item \texttt{ {{- repo_name -}}.bib}
+      \item \texttt{ {{- repo_name -}}.tex}
       \item \texttt{images}
     \end{itemize}
-   \item 左上のメニューボタンをクリック.設定のコンパイラをLaTexに変更する.主要文書がthesis.texになっていることも確認する.
+   \item 左上のメニューボタンをクリックして，設定のコンパイラを \LaTeX に変更する．\texttt{ {{- repo_name -}}.tex}になっていることも確認する．
 \end{enumerate}
 
 \section{Overleaf 上でのコンパイル}
-右上のコンパイルボタンを押す. または、Mac なら \texttt{command + S}、Windows なら \texttt{Ctrl + S}のショートカットを使う.
 
-また、標準クラスに\texttt{jbook}が適応されている.このクラスは、冊子体・書籍体のレイアウトを前提にレイアウトされるので、コンパイルするとページ番号が左右に現れたり、空白ページが現れる.一般的なデザインにしたいのならば、12行目の\texttt{jbook}を\texttt{report}に変更する.
+右上のコンパイルボタンを押す．または，Mac なら \texttt{command + S}，Windows なら \texttt{Ctrl + S}のショートカットを使う．
+
+また，標準クラスに\texttt{jbook}が適応されています．このクラスは、冊子体・書籍体のレイアウトを前提にレイアウトされるので，コンパイルするとページ番号が左右に現れたり，空白ページが現れます．一般的なデザインにしたいのならば，12行目の\texttt{jbook}を\texttt{report}に変更してください．
 
 \chapter{本文の書き方}
-卒論執筆のために編集しなければいけないファイルは `thesis.tex` と `thesis.bib` の2つです．
-`thesis.tex`に，卒論の本文を，`thesis,bib`には参考文献を $BibTeX$形式で記入します．
+
+卒論執筆のために編集しなければいけないファイルは \texttt{ {{- repo_name -}}.tex} と \texttt{ {{- repo_name -}}.bib} の2つです．
+\texttt{ {{- repo_name -}}.tex} に，卒論の本文を，\texttt{ {{- repo_name -}}.bib}には参考文献を BibTeX 形式で記入します．
 
 \section{表紙}
-以下の項目はフォームの入力より反映している.未入力や変更部分があるならば、以下に従って入力する.
+
+以下の項目はフォームの入力の内容が反映されています．
+未入力や変更部分があれば，以下に従って入力してください．
+
 \begin{description}
-  \item[\texttt{\textbackslash title\{...\}}] :\\論文の正式タイトルを入力する。長い場合は適宜 \verb|\\|    （改行）してもよい.
-  \item[\texttt{\textbackslash degree\{...\}}] : \\学士論文なら \texttt{学士}、修士論文なら \texttt{修士} と記述する.
-  \item[\texttt{\textbackslash author\{...\}}]: \\著者（執筆者）の氏名をフルネームで記入する.必要に応じて和文と欧文を使い分ける。姓と名の間は空白を入れる.
-  \item[\texttt{\textbackslash date\{...\}}] :\\提出日を「YYYY年M月D日」の形式で記載する。省略するとコンパイル日時が自動挿入されるが、指定することを推奨する。
-  \item[\texttt{\textbackslash schoolyear\{...\}}]: \\卒業年度を「YYYY 年」の形式で記入する.
-  \item[\texttt{\textbackslash department\{...\}}] :\\所属学部・学科名を正確に記述する.
-  \item[\texttt{\textbackslash stnumber\{...\}}] :\\学籍番号を数字のみで入力する.
-  \item[\texttt{\textbackslash supervisor\{...\}}] :\\指導教員の氏名と肩書を「氏名 教授」の形式で記載する.
+  \item[\texttt{\textbackslash title\{...\}}] :\\論文の正式タイトルを入力する．長い場合は適宜 \verb|\\|    （改行）してもよい．
+  \item[\texttt{\textbackslash degree\{...\}}] : \\学士論文なら \texttt{学士}，修士論文なら \texttt{修士} と記述する．
+  \item[\texttt{\textbackslash author\{...\}}]: \\著者（執筆者）の氏名をフルネームで記入する．必要に応じて和文と欧文を使い分ける．姓と名の間は空白を入れる．
+  \item[\texttt{\textbackslash date\{...\}}] :\\提出日を「YYYY年M月D日」の形式で記載する．省略するとコンパイル日時が自動挿入されるが，指定することを推奨する．
+  \item[\texttt{\textbackslash schoolyear\{...\}}]: \\卒業年度を「YYYY 年」の形式で記入する．
+  \item[\texttt{\textbackslash department\{...\}}] :\\所属学部・学科名を正確に記述する．
+  \item[\texttt{\textbackslash stnumber\{...\}}] :\\学籍番号を数字のみで入力する．
+  \item[\texttt{\textbackslash supervisor\{...\}}] :\\指導教員の氏名と肩書を「氏名 教授」の形式で記載する．
 \end{description}
 
 \section{本文の記述}
-プリアンブル部以下で \verb|\begin{document}| ～ \verb|\end{document}| の間に
-章や節を記述する。
+
+\verb|\begin{document}| ～ \verb|\end{document}| の間に
+章や節を記述する．
 
 \section{章・節の追加/編集}
+
 \begin{itemize}
-  \item 必要に応じて \verb|\chapter{章タイトル}|、\verb|\section{節タイトル}| を増減し、
-        自分の論文構成に合わせて編集する.
-  \item 章や節を追加した場合、目次や図表目次は自動更新されるため、
-        余計な手作業は不要である.
+  \item 必要に応じて \verb|\chapter{章タイトル}|、\verb|\section{節タイトル}| を追加・削除し，
+        自分の論文構成に合わせて編集する．
+  \item 章や節を追加した場合，目次や図表目次は自動更新されるため，
+        余計な手作業は不要です．
 \end{itemize}
 
 
 \chapter{相互参照}
-相互参照は，通常の LATEX 文書と同様に，\verb|\label| コマンドと\verb|\ref| コマンドを用いて行います.例えば，章番号を参照する場合には，以下のように \verb|\chapter| コマンドの直後に \verb|\label| コマンドを配置してラベルを宣言します.
-\begin{lstlisting}
-    \chapter{first}  
+
+相互参照は，通常の \LaTeX 文書と同様に，\verb|\label| コマンドと\verb|\ref| コマンドを用いてください．
+例えば，章番号を参照する場合には，以下のListing．\ref{lst:def}のように \verb|\chapter| コマンドの直後に \verb|\label| コマンドを配置してラベルを宣言します．
+その上で，参照したい箇所に，\verb|\ref| コマンドを配置してください（Listing. \ref{lst:ref}）．
+詳しくは，本利用説明書内の利用例および，\LaTeX2e 美文書作成入門\cite{latex2e} の第 10 章 などを参照してください．
+
+\begin{minipage}[t]{0.45\linewidth}
+  \begin{lstlisting}[caption=ラベルの宣言方法, label=lst:def]
+    \chapter{first}
     \label{chap:intro}
-\end{lstlisting}
-
-その上で，参照したい箇所に，\verb|\ref| コマンドを以下のように配置します.
-\begin{lstlisting}
-    \ref{chap:intro} 章では，本利用説明書の位置づけについて述べています.
-\end{lstlisting}
-
-\verb|\ref{chap:intro}| は実際の章番号に置換されて，以下のように組版されます. 
-
-\vspace{1em}
+  \end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\linewidth}
+  \begin{lstlisting}[caption=ラベルの参照方法, label=lst:ref]
+    \ref{chap:intro} 章では，本利用説明書の位置づけについて述べています．
+  \end{lstlisting}
+\end{minipage}
+\begin{minipage}[t]{0.9\linewidth}
+  \begin{lstlisting}[caption=相互参照の出力例, label=lst:example]
 1 章では，本利用説明書の位置づけについて述べています.
-
-\vspace{1em}
-詳しくは，本利用説明書内の利用例および，LATEX2e 美文書作成入門 [1] の第 10 章 などを参照してください.
-
-
+\end{lstlisting}
+\end{minipage}
 
 \chapter{図の挿入}
-図目次は、図を作成すると自動的に作成されるので操作する必要はない.
+
+図目次は，図を作成すると自動的に作成されるので操作する必要はない．
+
 \begin{enumerate}
-  \item 画像ファイルをEPS形式（platex コンパイル時）または PDF/PNGでimagesディレクトリの中に用意する.
-  \item 本文中に以下のように記述する（ファイル名が \texttt{javassist.eps} の例）。
+  \item 画像ファイルをPDF形式または PNG，EPS 形式で\texttt{images}ディレクトリの中に用意する．
+  \item 本文中に以下のように記述する（ファイル名が \texttt{javassist.eps} の例）．
 \end{enumerate}
 
 \begin{lstlisting}[language=TeX]
@@ -273,13 +298,17 @@ Overleaf とは LaTeX 専用のオンラインエディタです． 環境構築
 \end{figure}
 \end{lstlisting}
 
-画像のパスを\verb|\includegraphics[width=0.5\linewidth{...}| の ...に記述する
+画像のパスを\verb|\includegraphics[width=0.6\linewidth]{...}| の \texttt{...}に記述してください．
+また，この例の \verb!width=0.6\linewidth! は画像の幅を，現在の環境での幅（画像を置きたい領域）の60\%に設定することを意味します．
+\texttt{0.6}の部分を変更することで、画像のサイズを調整できます．
+また，高さを指定していませんが，この場合，全体の大きさが自動的に修正されます．
+幅ではなく，高さで指定したい場合は \texttt{width}の代わりに \texttt{height} を使い，倍率を指定する場合は \texttt{scale} を使います．
 
-\vspace{1em}
-\verb|\caption{}| には図の説明文を記述する
+また，\verb|\caption{}| には図の説明文を記述してください．図表番号が自動的に付与されます．
+図表番号を参照したい場合は，\verb|\ref{fig:sample}| を使って図を参照します．
+この場合，\verb!fig:sample! は，\verb|\label{fig:sample}| を使ってラベル付けを行います．
+このとき，\verb|\label| は \verb|\caption| の後に記述する必要があります（\verb!\caption!で初めて図表番号が決定されるためです）．
 
-\vspace{1em}
-相互参照をするために、\verb|\label{fig:sample}| を使ってラベル付けを行い。\verb|\ref{fig:sample}| を使って図を参照する
 \newpage
 
 \begin{figure}[h]
@@ -289,15 +318,14 @@ Overleaf とは LaTeX 専用のオンラインエディタです． 環境構築
   \label{fig:sample}
 \end{figure}
 
-図\ref{fig:sample}より、...
-
-
+図\ref{fig:sample}より，...
 
 
 \chapter{表の挿入}
-表目次は、表を作成すると自動的に作成されるので操作する必要はない.
 
-表を作成するときは、本文中に以下のように記述する.
+表目次は，表を作成すると自動的に作成されるので操作する必要はない．
+
+表を作成するときは，本文中に以下のように記述する．
 
 \begin{lstlisting}
 \begin{table}[h]
@@ -315,26 +343,12 @@ Overleaf とは LaTeX 専用のオンラインエディタです． 環境構築
 \end{table}
 \end{lstlisting}
 
-\verb|\caption{}| には表の説明文を記述する.
+\verb|\caption{}| には表の説明文を記述してください．相互参照をするために，\verb|\label{tab:sample}| を使ってラベル付けを行い，\verb|\ref{tab:sample}| を使って表を参照してください．
+表の内容は，\verb|\begin{tabular}| ... \verb|\end{tabular}|に記述します．
+\verb|\begin{tabular}{...}|で，各列の数とセルの位置，縦線を決めてください．l，c，rがそれぞれ左寄せ，中央揃え，右寄せ列の作成します．「｜」でセルの間の縦線の数を決めますなくても良い)．
+表の上下などに水平線を引く場合は，\verb|\hline|を使います．
+各行は「セル内容 \verb|&| セル内容 \verb|&| セル内容 \verb|\\|（改行）」で作成してください．
 
-\vspace{1em}
-相互参照をするために、\verb|\label{tab:sample}| を使ってラベル付けを行い。\verb|\ref{tab:sample}| を使って表を参照する.
-
-\vspace{1em}
-\verb|\begin{tabular}| ... \verb|\end{tabular}|に表の内容を記述する.
-
-\vspace{1em}
-\verb|\begin{tabular}{...}|で、各列の数とセルの位置、縦線を決める.
-
-l、c、rがそれぞれ左寄せ、中央揃え、右寄せ列の作成する.「｜」でセルの間の縦線の数を決める(なくても良い).
-
-\vspace{1em}
-表の上下などに水平線を引く場合は、\verb|\hline|を使う.
-
-\vspace{1em}
-各行は「セル内容 \verb|&| セル内容 \verb|&| セル内容 \verb|\\|（改行）」で作成する.
-
-これらを用いると以下のように組版される.
 \newpage
 
 \begin{table}[h]
@@ -350,30 +364,30 @@ l、c、rがそれぞれ左寄せ、中央揃え、右寄せ列の作成する.�
     \hline
   \end{tabular}
 \end{table}
-表\ref{tab:sample}より、...
+表\ref{tab:sample}より，...
 
 
 \chapter{参考文献}
 \begin{enumerate}
-  \item 参考文献データベース \texttt{thesis.bib}を BibTeX 形式で文献情報を記述する.
+  \item 参考文献データベース \texttt{thesis.bib}を BibTeX 形式で文献情報を記述します．
   \item texファイル中の
   \begin{verbatim}
   \bibliographystyle{csg-thesis}
   \bibliography{thesis}
   \end{verbatim}
-  はそのまま変更せず、\texttt{thesis.bib} を編集する。
+  はそのまま変更せず，\texttt{thesis.bib} を編集してください．
 
   
-  \item texファイルの本文中で引用したい箇所に \verb|\cite{キー}| を書く。
+  \item texファイルの本文中で引用したい箇所に \verb|\cite{キー}| を書きます．
 \end{enumerate}
-引用すると関連図書の章に参考文献が記述される.以下がその例である.
+引用すると関連図書の章に参考文献が記述される.以下がその例です．
 
  \vspace{1em}
 「Javaバイトコード変換による構造リフレクションの実現」\cite{Chiba2000}
 
 
 \chapter{PDFの生成}
-\texttt{llmk.toml}と\texttt{thesis.tex}があるディレクトリの階層までカレントディレクトリを移動し、以下のコマンドを実行することで \texttt{thesis.pdf}が作成される.
+\texttt{llmk.toml}と\texttt{thesis.tex}があるディレクトリの階層までカレントディレクトリを移動し，以下のコマンドを実行することで \texttt{ {{- repo_name -}}.tex}が作成されます．
 \begin{verbatim}
     llmk
 \end{verbatim}
@@ -389,20 +403,17 @@ l、c、rがそれぞれ左寄せ、中央揃え、右寄せ列の作成する.�
 
 \textbf{注意：} 
 
-texファイルのファイル名を変更したらpdf化ができない.もし変更するのであれば、\texttt{llmk.toml} ファイルに書かれている内容を以下のように変更する必要がある.
-
- \texttt{thesis.tex} $\rightarrow$ \texttt{ファイル名.tex}
-
+\TeX ファイルのファイル名を変更したらコンパイルに失敗します．
+これは，\texttt{llmk.toml} に \TeX のファイル名が記載されているためです．
+そのため，\TeX ファイルの名前を変更する場合には，\texttt{llmk.toml} の内容も同時に変更してください．
 
 \chapter{まとめ}
+
 本ドキュメントでは、卒業論文テンプレート
-（\texttt{thesis.tex}）の各項目とコンパイル手順、図表挿入や文献管理の方法を解説した。
-実際にテンプレートをコピーして必要事項を入力し、上記手順でコンパイルを
-行っていただければ、学内要件を満たした体裁の論文が生成される。
-不明点があれば、指導教員や演習担当教員に確認のうえ、適宜修正して利用すること。
-
-
-
+（\texttt{thesis.tex}）の各項目とコンパイル手順，図表挿入や文献管理の方法を解説した．
+実際にテンプレートをコピーして必要事項を入力し，上記手順でコンパイルを
+行っていただければ，学内要件を満たした体裁の論文が生成されます．
+不明点があれば、指導教員や演習担当教員に確認のうえ，適宜修正して利用してください．
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -414,7 +425,7 @@ texファイルのファイル名を変更したらpdf化ができない.もし�
 %  (4)もう何回か platex にかける
 %
 \bibliographystyle{csg-thesis}
-\bibliography{thesis}  %% thesis.bib というファイルを用意
+\bibliography{ {{- dir_name -}}.bib}  %% thesis.bib というファイルを用意
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
