@@ -1,0 +1,56 @@
+% 国際会議や研究会の論文
+@InProceedings{Chiba2000,
+  author =	 "Shigeru Chiba",
+  title =	 "Load-time Structural Reflection in Java",
+  booktitle =	 "Proceedings of the European Conference on
+                  Object-Oriented Programming",
+  pages =	 "313--336",
+  year =	 2000,
+  month =	 "Jun.",
+}
+%========================================
+% 上の参考文献データベースの説明
+%========================================
+% ・InProceedings : 文献タイプ.これは国際会議・研究会発表論文を示す
+% ・Chiba2000     : 本文中で参照するキー
+% ・author    =  著者名を記述（ここでは欧文）。複数名いる場合は “and” で                   区切る
+% ・title     =  発表論文のタイトル。
+% ・booktitle = 会議録やワークショップ名。長い場合は適宜改行してもよい
+% ・pages     =  会議録の掲載ページ範囲。“313--336” のように半角ハイフン                  2つで範囲を表す
+% ・year      = 発表年を 4 桁で記述
+% ・month     = 発表月を英語で記述。慣例的に末尾にピリオド “.” を付ける
+
+%========================================
+% 本文中での引用例
+%========================================
+
+% 先行研究を引用する箇所では次のように書く：
+% 先行研究\cite{Chiba2000}
+
+% 論文誌
+@Article{Chiba2001a,
+  author =	 "千葉 滋 and 立堀 道昭",
+  title =	 "Javaバイトコード変換による構造リフレクションの実現",
+  journal =	 "情報処理学会 論文誌",
+  pages =	 "2752--2760",
+  volume =	 42,
+  number =	 11,
+  year =	 2001,
+  month =	 "Nov.",
+}
+
+% 本
+@Book{Chiba2001b,
+  author =	 "千葉 滋",
+  title =	 "GUIライブラリの仕組み",
+  publisher =	 "朝倉書店",
+  year =	 2001,
+  month =	 3
+}
+
+% URL(\urlを使えば自動的に折り畳まれる)
+@Misc{Javassist,
+  author = "千葉 滋",
+  title = "Javassist Home Page",
+  howpublished = "\url{http://www.csg.is.titech.ac.jp/~chiba/javassist/index.html}",
+}

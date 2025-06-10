@@ -42,7 +42,6 @@ def process_data():
         fn_kanji = request.form.get('firstNameKanji', '')
         ln_kanji = request.form.get('lastNameKanji', '')
         fn_kana  = request.form.get('firstNameKana', '')
-        ln_kana  = request.form.get('lastNameKana', '')
         title    = request.form.get('title', '')
         stu_no   = request.form.get('studentNumber', '')
         teacher  = request.form.get('teacherName', '')
@@ -53,12 +52,13 @@ def process_data():
 
         # ローマ字変換
         fn_roma = romkan.to_roma(fn_kana)
-        ln_roma = romkan.to_roma(ln_kana)
-        repo_name = f"{fiscal}bthesis_{fn_roma}"
+        repo_name= f"{fiscal}bthesis\_{fn_roma}"
+        dir_name = f"{fiscal}bthesis_{fn_roma}"
 
         # テンプレート読み込み
         tex_tmpl    = env.get_template('thesis_template.tex')
         readme_tmpl = env.get_template('README.md')
+        llmk_tmpl  = env.get_template('llmk.toml')
 
         # レンダリング
         rendered_tex    = tex_tmpl.render(
@@ -68,7 +68,9 @@ def process_data():
             studentNumber=stu_no,
             teacherName=teacher,
             faculty=faculty,
-            year=fiscal
+            year=fiscal,
+            repo_name=repo_name,
+            dir_name=dir_name
         )
         rendered_readme = readme_tmpl.render(
             firstNameKanji=fn_kanji,
@@ -78,8 +80,12 @@ def process_data():
             year=fiscal
         )
 
+        rendered_llmk = llmk_tmpl.render(
+            dir_name=dir_name
+        )
+
         # 作業ディレクトリ再生成
-        repo_path = os.path.join(UPLOADS_DIR, repo_name)
+        repo_path = os.path.join(UPLOADS_DIR, dir_name)
         if os.path.exists(repo_path):
             shutil.rmtree(repo_path)
         os.makedirs(repo_path)
@@ -89,8 +95,9 @@ def process_data():
 
         # テキストファイル作成
         for fname, content in {
-            'thesis.tex': rendered_tex,
-            'README.md': rendered_readme
+            f'{dir_name}.tex': rendered_tex,
+            'README.md': rendered_readme,
+            'llmk.toml': rendered_llmk,
         }.items():
             with open(os.path.join(repo_path, fname), 'w', encoding='utf-8') as f:
                 f.write(content)
@@ -105,23 +112,24 @@ def process_data():
         # その他フォーマットファイルをコピー
         for fname in [
             'csg-thesis.sty',
-            'thesis.bib',
             'csg-thesis.bst',
-            'latexmkrc',
-            'llmk.toml'
+            'latexmkrc'
         ]:
             src = os.path.join(FORMAT_DIR, fname)
             dst = os.path.join(repo_path, fname)
             shutil.copy2(src, dst)
 
         # サンプル PDF をコピー
-        pdf_src = os.path.join(FORMAT_DIR, 'thesis.pdf')
-        pdf_dst = os.path.join(repo_path, 'theisi.pdf')
+        pdf_src = os.path.join(FORMAT_DIR, 'thesis_template.pdf')
+        pdf_dst = os.path.join(repo_path, 'guide.pdf')
         shutil.copy2(pdf_src, pdf_dst)
 
+        bib_src = os.path.join(FORMAT_DIR, 'thesis_template.bib')
+        bib_dst = os.path.join(repo_path, f'{dir_name}.bib')
+        shutil.copy2(bib_src, bib_dst)
 
         # ZIP 作成
-        zip_name = f"{repo_name}.zip"
+        zip_name = f"{dir_name}.zip"
         zip_path = os.path.join(UPLOADS_DIR, zip_name)
         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(repo_path):

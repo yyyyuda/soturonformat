@@ -1,4 +1,4 @@
-source = [ "thesis.tex" ]
+source = [ "{{dir_name}}.tex" ]
 
 latex = "platex"
 bibtex = "pbibtex"
